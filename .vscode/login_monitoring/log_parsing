@@ -1,0 +1,36 @@
+import csv
+
+def parse_windows_logs(log_path):
+    failed_logins = []
+    successful_logins = []
+
+    try:
+        with open(log_path, mode='r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                event_id = row['Event ID']
+                timestamp = row['Date and Time']
+                message = row['Message']
+
+                # Parse login events
+                if event_id == '4624':  # Successful login
+                    successful_logins.append((timestamp, message))
+                elif event_id == '4625':  # Failed login
+                    failed_logins.append((timestamp, message))
+    except Exception as e:
+        print(f"Error reading log file: {e}")
+        return
+
+    # Display results
+    print("Successful Logins:")
+    for login in successful_logins:
+        print(f"Timestamp: {login[0]}\nMessage:\n{login[1]}\n")
+
+    print("\nFailed Logins:")
+    for login in failed_logins:
+        print(f"Timestamp: {login[0]}\nMessage:\n{login[1]}\n")
+
+# Test the script
+log_path = "C:\Users\estel\Downloads\event_logs.csv"  # Replace with the path to your CSV file
+parse_windows_logs(log_path)
+
