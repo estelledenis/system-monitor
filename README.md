@@ -48,3 +48,11 @@ Port 631 is open, which is related to the printer system. This is usually fine u
 Port 3306 is open, which means a MariaDB database is running. If this is not protected with a strong password and is accessible from outside, someone could try to access the database.
 
 Ports 5000, 7000, and 9000 are open, showing that some web services and applications are running. One of them is Apache Tomcat, which is used for Java applications. Another is SonarQube, which is an Elasticsearch service. If these are not secured, they could be a risk.
+
+
+Below is another example of a vulnerability scan:
+
+![vulernability_scan_results](https://github.com/user-attachments/assets/6812ef12-6627-484e-a7f8-5bd291512c1f)
+
+
+This is a Lynis security audit, and it has flagged several potential security issues. The scan checks various aspects of the system, including user authentication, file permissions, network settings, and software configurations. Some notable warnings include MongoDB allowing unauthorized access, lacking a firewall, weak home directory permissions, missing a malware scanner, and insecure file permissions. Additionally, it suggests installing mod_evasive and mod_security for Apache, checking symlinked mount points manually, and hardening compilers.
