@@ -33,7 +33,7 @@ NOISE_FILTERS = [
     r"SecError",
 ]
 
-# ✅ Improved real-time log stream command
+# Real-time log stream command
 LOG_COMMAND_REALTIME = """
 log stream --debug --info --style syslog --predicate '
 (subsystem == "com.apple.authd") OR
@@ -46,7 +46,7 @@ log stream --debug --info --style syslog --predicate '
 (eventMessage contains[c] "authorization succeeded")'
 """
 
-# ✅ Improved 24-hour login history search
+# 24-hour login history search
 LOG_COMMAND_24H = """
 log show --last 24h --debug --info --predicate '
 (eventMessage contains[c] "login") OR
