@@ -13,7 +13,14 @@ In an attempt to simplify the process, what follows is an explanation of these t
 
 ### Login Monitoring ###
 
-This tracks every login attempt on the system. It records details like timestamp, username, success/failure status, and IP address in order to help detect unauthorized access attempts before they become a problem.
+### 🔹 What is Login Monitoring?
+**Login monitoring** tracks every login attempt on a system to detect unauthorized access and security threats.
+
+### 🔹 What Does It Record?
+- **📅 Timestamp** – Logs the exact date and time of each login attempt.
+- **👤 Username** – Identifies which account was used for the login attempt.
+- **✅ Success/❌ Failure Status** – Indicates whether the login was successful or failed.
+- **🌍 IP Address** – Captures the source of the login attempt.
 
 
 Below is an example of successful login attempts, including the user, login time, and IP address (if remote).
@@ -28,11 +35,13 @@ Below is an example of all currently logged-in users, their terminal sessions, a
 
 ### Vulnerability Scans ###
 
+### 🔹 What Are Vulnerability Scans?
+A **vulnerability scan** is an automated process that identifies security weaknesses in a system, network, or application. It helps organizations detect and mitigate potential threats before they can be exploited.
 
-  - Vulnerability scans look for several things:
-    - Open ports (entry points that attackers might exploit).
-    - Services running on the system.
-    - Potential security weaknesses.
+### 🔹 What Do Vulnerability Scans Look For?
+- **🛠️ Open Ports** – Identifies entry points that attackers might exploit.
+- **⚙️ Running Services** – Detects active services that could be potential targets.
+- **🔓 Security Weaknesses** – Finds misconfigurations, outdated software, and vulnerabilities.
 
 For vulnerabilities, ports left open are a potential security risk and could allow hackers to gain access to your system. The system itself has a way to heck for open ports. Below is an example of running such a command:
 
@@ -56,3 +65,21 @@ Below is another example of a vulnerability scan:
 
 
 This is a Lynis security audit, and it has flagged several potential security issues. The scan checks various aspects of the system, including user authentication, file permissions, network settings, and software configurations. Some notable warnings include MongoDB allowing unauthorized access, lacking a firewall, weak home directory permissions, missing a malware scanner, and insecure file permissions. Additionally, it suggests installing mod_evasive and mod_security for Apache, checking symlinked mount points manually, and hardening compilers.
+
+
+### Firewall Configuration ###
+
+### 🔹 What is a Firewall?
+A **firewall** is a security system that monitors and controls incoming and outgoing network traffic based on predefined rules. It acts as a barrier between a trusted internal network and external threats.
+
+### 🔹 Why Are Firewalls Important?
+- **🚫 Prevents Unauthorized Access** – Blocks malicious or unauthorized connections.
+- **🛡️ Protects Against Cyber Threats** – Shields systems from malware, viruses, and hacking attempts.
+- **🔍 Regulates Network Traffic** – Filters and controls data flow based on security policies.
+- **🔒 Enhances Privacy & Data Security** – Prevents data breaches by blocking unauthorized transfers.
+- **📊 Monitors & Logs Activity** – Keeps records of network activity for threat detection and analysis.
+
+
+Below is an example of a firewall configured on a macOS. Here, Remote Login (SSH) is allowed, meaning SSH access is permitted, and Stealth Mode is enabled, making the Mac ignore ping and ICMP requests, improving security by making it less discoverable on a network.
+
+![firewall_configuration](https://github.com/user-attachments/assets/818f703b-6453-4c15-8a9e-9ae8647053c6)
