@@ -54,10 +54,33 @@ def process_logs(log_lines):
     for line in log_lines:
         if any(re.search(pattern, line, re.IGNORECASE) for pattern in FAILED_LOGIN_PATTERNS):
             if not any(re.search(noise, line, re.IGNORECASE) for noise in NOISE_FILTERS):
-                print(f"[❌ ALERT] Failed login: {clean_log_output(line)}", flush=True)  # Flush immediately
+                explanation = generate_explanation(line, "failed")
+                print(f"[❌ ALERT] Failed login: {clean_log_output(line)}")
+                print(f"ℹ️ {explanation}\n", flush=True)  # Print explanation with a newline
 
         elif any(re.search(pattern, line, re.IGNORECASE) for pattern in SUCCESSFUL_LOGIN_PATTERNS):
-            print(f"[✅ SUCCESS] Successful login: {clean_log_output(line)}", flush=True)  # Flush immediately
+            explanation = generate_explanation(line, "success")
+            print(f"[✅ SUCCESS] Successful login: {clean_log_output(line)}")
+            print(f"ℹ️ {explanation}\n", flush=True)  # Print explanation with a newline
+
+def generate_explanation(log_line, status):
+    """Generate a brief explanation for each login attempt."""
+    if "authentication failed" in log_line.lower():
+        return "An authentication attempt was made, but the credentials were incorrect."
+    elif "invalid password" in log_line.lower():
+        return "A user attempted to log in but entered the wrong password."
+    elif "SecureToken authentication failed" in log_line:
+        return "A system-level authentication attempt using SecureToken was unsuccessful."
+    elif "session opened" in log_line.lower():
+        return "A new login session was successfully established."
+    elif "authorization succeeded" in log_line.lower():
+        return "A user successfully authenticated and was granted access."
+    elif "opendirectoryd" in log_line:
+        if status == "failed":
+            return "Authentication failed at the directory service level."
+        else:
+            return "Authentication succeeded at the directory service level."
+    return "Unknown login event detected."
 
 def clean_log_output(log_line):
     """Extract relevant information from log lines to keep output concise."""
