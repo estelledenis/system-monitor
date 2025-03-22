@@ -1,5 +1,5 @@
 {
-    "scan_time": "2025-03-11 22:32:44",
+    "scan_time": "2025-03-16 22:06:00",
     "host": "Your Computer (127.0.0.1)",
     "explanation": {
         "Port Number": "The specific network port that was scanned.",
@@ -26,20 +26,6 @@
             "Protocol": "TCP",
             "Service Detected": "ipp",
             "Software Version": "2.3",
-            "Risk Assessment": "🟢 Low - No immediate threat."
-        },
-        {
-            "Port Number": 49163,
-            "Protocol": "TCP",
-            "Service Detected": "Unknown",
-            "Software Version": "Unknown",
-            "Risk Assessment": "🟢 Low - No immediate threat."
-        },
-        {
-            "Port Number": 49175,
-            "Protocol": "TCP",
-            "Service Detected": "unknown",
-            "Software Version": "Unknown",
             "Risk Assessment": "🟢 Low - No immediate threat."
         }
     ]

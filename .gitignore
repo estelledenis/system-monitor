@@ -1,0 +1,11 @@
+venv/
+.venv/
+.eggs/
+build/
+dist/
+.vscode/
+__pycache__/
+*.spec
+*.pyc
+*.log
+*.DS_Store
