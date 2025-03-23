@@ -83,3 +83,33 @@ A **firewall** is a security system that monitors and controls incoming and outg
 Below is an example of a firewall configured on a macOS. Here, Remote Login (SSH) is allowed, meaning SSH access is permitted, and Stealth Mode is enabled, making the Mac ignore ping and ICMP requests, improving security by making it less discoverable on a network.
 
 ![firewall_configuration](https://github.com/user-attachments/assets/818f703b-6453-4c15-8a9e-9ae8647053c6)
+
+
+
+## 🚀 Installation & Usage ##
+
+### Requirements ###
+- Python 3.9 or newer
+- Nmap installed
+- macOS 11 or higher
+
+
+### 1. Clone the repository ###
+```git clone https://github.com/estelledenis/system-monitor.git```
+
+```cd system-monitor```
+
+
+### 2. Set up virtual environment ###
+```python3 -m venv venv```
+
+```source venv/bin/activate```
+
+```pip install -r requirements.txt```
+
+
+### 3. Run the app ###
+```bash start_dashboard.sh```
+
+### 4. Apply firewall rules (after vulnerability scan) ###
+After running a vulnerability scan and firewall generation, activate the rules manually by clicking the "Copy Firewall Command" button. Open a new terminal and run the command.
