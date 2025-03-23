@@ -86,6 +86,7 @@ Below is an example of a firewall configured on a macOS. Here, Remote Login (SSH
 
 
 
+
 ## 🚀 Installation & Usage ##
 
 ### Requirements ###
