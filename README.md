@@ -23,14 +23,11 @@ In an attempt to simplify the process, what follows is an explanation of these t
 - **🌍 IP Address** – Captures the source of the login attempt.
 
 
-Below is an example of successful login attempts, including the user, login time, and IP address (if remote).
+Below is an example of the log monitoring output on the System Monitor application.
 
-<img width="556" alt="Screen Shot 2025-01-24 at 2 20 40 PM" src="https://github.com/user-attachments/assets/824b1702-4d27-4cf3-987f-509b6c8e8090" />
+![0E45BC98-019F-4CCE-99E6-CCFDF883E102](https://github.com/user-attachments/assets/158a278a-b87e-4204-a581-ec1369262c79)
 
-
-Below is an example of all currently logged-in users, their terminal sessions, and login times.
-
-<img width="322" alt="Screen Shot 2025-01-24 at 2 20 49 PM" src="https://github.com/user-attachments/assets/02dbf169-11db-44f0-85b4-1e1392ee8ecb" />
+![556B0190-6E79-4A50-9CD8-25419C4D7444](https://github.com/user-attachments/assets/f3f0ff58-c3d0-46e5-92c5-dccf88e6928b)
 
 
 ### Vulnerability Scans ###
@@ -43,7 +40,7 @@ A **vulnerability scan** is an automated process that identifies security weakne
 - **⚙️ Running Services** – Detects active services that could be potential targets.
 - **🔓 Security Weaknesses** – Finds misconfigurations, outdated software, and vulnerabilities.
 
-For vulnerabilities, ports left open are a potential security risk and could allow hackers to gain access to your system. The system itself has a way to heck for open ports. Below is an example of running such a command:
+For vulnerabilities, ports left open are a potential security risk and could allow hackers to gain access to your system. The system itself has a way to check for open ports. Below is an example of running such a command:
 
  
 ![Image 2-7-25 at 6 24 PM](https://github.com/user-attachments/assets/247548c0-1977-4ac9-9e99-0de6998d6f3e)
@@ -59,12 +56,11 @@ Port 3306 is open, which means a MariaDB database is running. If this is not pro
 Ports 5000, 7000, and 9000 are open, showing that some web services and applications are running. One of them is Apache Tomcat, which is used for Java applications. Another is SonarQube, which is an Elasticsearch service. If these are not secured, they could be a risk.
 
 
-Below is another example of a vulnerability scan:
-
-![vulernability_scan_results](https://github.com/user-attachments/assets/6812ef12-6627-484e-a7f8-5bd291512c1f)
+Below is an example of a vulnerability scan output on the System Monitor application:
 
 
-This is a Lynis security audit, and it has flagged several potential security issues. The scan checks various aspects of the system, including user authentication, file permissions, network settings, and software configurations. Some notable warnings include MongoDB allowing unauthorized access, lacking a firewall, weak home directory permissions, missing a malware scanner, and insecure file permissions. Additionally, it suggests installing mod_evasive and mod_security for Apache, checking symlinked mount points manually, and hardening compilers.
+![93FBE3CE-017A-4DA5-985A-3D3AA6CF622B](https://github.com/user-attachments/assets/f73bf648-f2f3-4700-93b8-b7bedf34f465)
+
 
 
 ### Firewall Configuration ###
@@ -80,9 +76,9 @@ A **firewall** is a security system that monitors and controls incoming and outg
 - **📊 Monitors & Logs Activity** – Keeps records of network activity for threat detection and analysis.
 
 
-Below is an example of a firewall configured on a macOS. Here, Remote Login (SSH) is allowed, meaning SSH access is permitted, and Stealth Mode is enabled, making the Mac ignore ping and ICMP requests, improving security by making it less discoverable on a network.
+Below is an example of the result of the firewall rule creation on the System Monitor application.
 
-![firewall_configuration](https://github.com/user-attachments/assets/818f703b-6453-4c15-8a9e-9ae8647053c6)
+![FE89B0C1-DF82-4B8D-A65E-5A5214A18375](https://github.com/user-attachments/assets/466a521f-9b20-4289-a852-d2c4d659eb43)
 
 
 
