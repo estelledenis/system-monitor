@@ -40,21 +40,6 @@ A **vulnerability scan** is an automated process that identifies security weakne
 - **⚙️ Running Services** – Detects active services that could be potential targets.
 - **🔓 Security Weaknesses** – Finds misconfigurations, outdated software, and vulnerabilities.
 
-For vulnerabilities, ports left open are a potential security risk and could allow hackers to gain access to your system. The system itself has a way to check for open ports. Below is an example of running such a command:
-
- 
-![Image 2-7-25 at 6 24 PM](https://github.com/user-attachments/assets/247548c0-1977-4ac9-9e99-0de6998d6f3e)
-
-Here, the scan results show which programs on the system are open and waiting for connections. This means different applications are running and could be accessed from outside if not properly secured.
-
-Port 22 is open, which is for SSH. This allows remote access to the computer.
-
-Port 631 is open, which is related to the printer system. This is usually fine unless the computer is exposed to an unsafe network.
-
-Port 3306 is open, which means a MariaDB database is running. If this is not protected with a strong password and is accessible from outside, someone could try to access the database.
-
-Ports 5000, 7000, and 9000 are open, showing that some web services and applications are running. One of them is Apache Tomcat, which is used for Java applications. Another is SonarQube, which is an Elasticsearch service. If these are not secured, they could be a risk.
-
 
 Below is an example of a vulnerability scan output on the System Monitor application:
 
