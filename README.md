@@ -73,7 +73,23 @@ Below is an example of the result of the firewall rule creation on the System Mo
 ### Requirements ###
 - Python 3.9 or newer
 - Nmap installed
+- pip (Python package manager)
 - macOS 11 or higher
+
+
+To check if Python is installed:
+```python3 --version```
+
+if not, download it from python.org.
+
+To check if pip is installed:
+```pip --version```
+
+if not:
+```python3 -m ensurepip --upgrade```
+
+or install via homebrew:
+```brew install python3```
 
 
 ### 1. Clone the repository ###
