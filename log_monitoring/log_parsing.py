@@ -125,12 +125,15 @@ def generate_explanation(log_line, status):
     return "Unknown login event detected."
 
 def summarize_log(log_line):
-    # Try to strip to the meaningful content
+    # Clean line and remove unnecessary parts like spinner
     line = clean_log_output(log_line)
+    line = re.sub(r",?\s*spinner:\d+", "", line, flags=re.IGNORECASE)
+
     for keyword in ["Authentication", "authorization", "Touch ID", "session", "loginwindow", "opendirectoryd"]:
         if keyword in line:
             idx = line.find(keyword)
             return line[idx:]
+
     return line
 
 def clean_log_output(log_line):
