@@ -64,33 +64,42 @@ def process_logs(log_lines):
 
         timestamp = extract_timestamp(line)
         ts_str = timestamp.strftime("[%Y-%m-%d %H:%M:%S]") if timestamp else "[?]"
+        log_summary = summarize_log(line)
 
         if TOUCH_ID_PROMPT_PATTERN in line:
             touch_id_prompt_time = timestamp
+            print("\n" + "━" * 40)
+            print(f"[🟡 INFO] Touch ID Prompt Detected")
             print(f"🕒 {ts_str}")
-            print(f"[🟡 INFO] Touch ID prompt detected")
-            print(f"🔍 Log line: {clean_log_output(line)}\n", flush=True)
+            print(f"🔍 {log_summary}")
+            print("━" * 40, flush=True)
 
         elif any(re.search(pat, line, re.IGNORECASE) for pat in FAILED_LOGIN_PATTERNS):
             if not any(re.search(noise, line, re.IGNORECASE) for noise in NOISE_FILTERS):
                 explanation = generate_explanation(line, "failed")
+                print("\n" + "━" * 40)
+                print(f"[❌ ALERT] Login Failed")
                 print(f"🕒 {ts_str}")
-                print(f"[❌ ALERT] Failed login")
-                print(f"🔍 Log line: {clean_log_output(line)}")
-                print(f"ℹ️ {explanation}\n", flush=True)
+                print(f"🔍 {log_summary}")
+                print(f"ℹ️ {explanation}")
+                print("━" * 40, flush=True)
 
         elif any(re.search(pat, line, re.IGNORECASE) for pat in SUCCESSFUL_LOGIN_PATTERNS):
             if touch_id_prompt_time and timestamp and timestamp - touch_id_prompt_time <= touch_id_window:
+                print("\n" + "━" * 40)
+                print(f"[✅ TOUCH ID] Login Successful (inferred via Touch ID)")
                 print(f"🕒 {ts_str}")
-                print(f"[✅ TOUCH ID] Login successful — likely via Touch ID (inferred)")
-                print(f"🔍 Log line: {clean_log_output(line)}\n", flush=True)
+                print(f"🔍 {log_summary}")
+                print("━" * 40, flush=True)
                 touch_id_prompt_time = None
             else:
                 explanation = generate_explanation(line, "success")
+                print("\n" + "━" * 40)
+                print(f"[✅ SUCCESS] Login Accepted")
                 print(f"🕒 {ts_str}")
-                print(f"[✅ SUCCESS] Successful login")
-                print(f"🔍 Log line: {clean_log_output(line)}")
-                print(f"ℹ️ {explanation}\n", flush=True)
+                print(f"🔍 {log_summary}")
+                print(f"ℹ️ {explanation}")
+                print("━" * 40, flush=True)
 
 def extract_timestamp(log_line):
     try:
@@ -115,6 +124,15 @@ def generate_explanation(log_line, status):
         return "Authentication succeeded at the directory service level." if status == "success" else "Authentication failed at the directory service level."
     return "Unknown login event detected."
 
+def summarize_log(log_line):
+    # Try to strip to the meaningful content
+    line = clean_log_output(log_line)
+    for keyword in ["Authentication", "authorization", "Touch ID", "session", "loginwindow", "opendirectoryd"]:
+        if keyword in line:
+            idx = line.find(keyword)
+            return line[idx:]
+    return line
+
 def clean_log_output(log_line):
     return re.sub(r"\s+", " ", log_line.strip())
 
@@ -138,4 +156,3 @@ if __name__ == "__main__":
     print("🔍 Fetching login attempts from the last 24 hours...\n", flush=True)
     search_past_24h()
     monitor_logs()
-
