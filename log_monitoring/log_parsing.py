@@ -48,6 +48,7 @@ PAST_24H_LOG_COMMAND = """log show --last 24h \
 --info"""
 
 touch_id_prompt_time = None
+last_touch_prompt_time = None
 touch_id_window = timedelta(seconds=10)
 
 def search_past_24h():
@@ -56,7 +57,7 @@ def search_past_24h():
     process_logs(log_lines)
 
 def process_logs(log_lines):
-    global touch_id_prompt_time
+    global touch_id_prompt_time, last_touch_prompt_time
 
     for line in log_lines:
         if not line.strip():
@@ -66,7 +67,11 @@ def process_logs(log_lines):
         ts_str = timestamp.strftime("[%Y-%m-%d %H:%M:%S]") if timestamp else "[?]"
         log_summary = summarize_log(line)
 
+        # Deduplicate Touch ID prompts within 2 seconds
         if TOUCH_ID_PROMPT_PATTERN in line:
+            if last_touch_prompt_time and timestamp and (timestamp - last_touch_prompt_time).total_seconds() < 2:
+                continue
+            last_touch_prompt_time = timestamp
             touch_id_prompt_time = timestamp
             print("\n" + "━" * 40)
             print(f"[🟡 INFO] Touch ID Prompt Detected")
