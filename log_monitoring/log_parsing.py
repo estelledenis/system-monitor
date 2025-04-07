@@ -22,6 +22,8 @@ SUCCESSFUL_LOGIN_PATTERNS = [
 
 TOUCH_ID_PROMPT_PATTERN = r"Touch ID or Enter Password"
 
+SSH_LOGIN_PATTERN = r"sshd.*Accepted.*for (\w+) from ([\d\.]+)"
+
 NOISE_FILTERS = [
     r"ks_crypt: .* keychain is locked",
     r"TrustedPeersHelp",
@@ -30,21 +32,11 @@ NOISE_FILTERS = [
 ]
 
 REAL_TIME_LOG_COMMAND = """log stream --style syslog \
---predicate 'subsystem BEGINSWITH "com.apple." AND (
-    composedMessage CONTAINS[c] "authentication" OR
-    composedMessage CONTAINS[c] "authorization succeeded" OR
-    composedMessage CONTAINS[c] "session opened" OR
-    composedMessage CONTAINS[c] "Touch ID or Enter Password" OR
-    composedMessage CONTAINS[c] "user authenticated"
-)' \
+--predicate '(process == "sshd" OR composedMessage CONTAINS[c] "authentication" OR composedMessage CONTAINS[c] "authorization succeeded" OR composedMessage CONTAINS[c] "session opened" OR composedMessage CONTAINS[c] "Touch ID or Enter Password" OR composedMessage CONTAINS[c] "user authenticated")' \
 --info"""
 
 PAST_24H_LOG_COMMAND = """log show --last 24h \
---predicate 'subsystem BEGINSWITH "com.apple." AND (
-    composedMessage CONTAINS[c] "authentication failed" OR
-    composedMessage CONTAINS[c] "login failed" OR
-    composedMessage CONTAINS[c] "Touch ID or Enter Password"
-)' \
+--predicate '(process == "sshd" OR composedMessage CONTAINS[c] "authentication failed" OR composedMessage CONTAINS[c] "login failed" OR composedMessage CONTAINS[c] "Touch ID or Enter Password")' \
 --info"""
 
 touch_id_prompt_time = None
@@ -67,7 +59,19 @@ def process_logs(log_lines):
         ts_str = timestamp.strftime("[%Y-%m-%d %H:%M:%S]") if timestamp else "[?]"
         log_summary = summarize_log(line)
 
-        # Deduplicate Touch ID prompts within 2 seconds
+        # SSH login with IP and username
+        ssh_match = re.search(SSH_LOGIN_PATTERN, line)
+        if ssh_match:
+            username, ip = ssh_match.groups()
+            print("\n" + "━" * 40)
+            print(f"[🌐 SSH LOGIN] Remote login detected")
+            print(f"🕒 {ts_str}")
+            print(f"👤 User: {username}")
+            print(f"📍 IP: {ip}")
+            print("━" * 40, flush=True)
+            continue
+
+        # Deduplicate Touch ID prompts
         if TOUCH_ID_PROMPT_PATTERN in line:
             if last_touch_prompt_time and timestamp and (timestamp - last_touch_prompt_time).total_seconds() < 2:
                 continue
