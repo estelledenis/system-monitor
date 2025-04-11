@@ -20,7 +20,7 @@ In an attempt to simplify the process, what follows is an explanation of these t
 - **📅 Timestamp** – Logs the exact date and time of each login attempt.
 - **👤 Username** – Identifies which account was used for the login attempt.
 - **✅ Success/❌ Failure Status** – Indicates whether the login was successful or failed.
-- **🌍 IP Address** – Captures the source of the login attempt.
+- **🌍 IP Address** – Captures the source of the login attempt, if done remotely.
 
 
 Below is an example of the log monitoring output on the System Monitor application.
