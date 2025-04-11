@@ -168,3 +168,4 @@ if __name__ == "__main__":
     print("🔍 Fetching login attempts from the last 24 hours...\n", flush=True)
     search_past_24h()
     monitor_logs()
+    
