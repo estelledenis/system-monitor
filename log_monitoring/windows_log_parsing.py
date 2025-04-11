@@ -4,9 +4,10 @@ import datetime
 import time
 import sys
 import io
+import os
 
-# Force UTF-8 stdout for emoji and international char support
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+os.system("chcp 65001 >nul")
 
 def read_windows_login_events(server='localhost', log_type='Security', last_hours=24):
     events = []
@@ -30,7 +31,7 @@ def read_windows_login_events(server='localhost', log_type='Security', last_hour
                 inserts = event.StringInserts or []
                 user = inserts[5] if len(inserts) > 5 else "?"
                 process = inserts[17] if len(inserts) > 17 else "?"
-                msg = f"🕒 {event.TimeGenerated.Format()} | {'✅ SUCCESS' if event.EventID == 4624 else '❌ ALERT'} | User: {user} | Source: {process}"
+                msg = f"[{event.TimeGenerated.Format()}] | {'SUCCESS' if event.EventID == 4624 else 'FAILURE'} | User: {user} | Source: {process}"
                 events.append(msg)
     return list(reversed(events))
 
@@ -45,5 +46,5 @@ def monitor_log_realtime(poll_interval=5):
         time.sleep(poll_interval)
 
 if __name__ == '__main__':
-    print("🔍 Real-time Windows login monitoring started...")
+    print("Real-time Windows login monitoring started...")
     monitor_log_realtime(poll_interval=5)
