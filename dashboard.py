@@ -8,7 +8,11 @@ import platform
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 VENV_PATH = os.path.join(BASE_DIR, "venv")
-PYTHON_EXEC = os.path.join(VENV_PATH, "Scripts" if platform.system() == "Windows" else "bin", "python")
+PYTHON_EXEC = os.path.join(
+    VENV_PATH,
+    "Scripts" if platform.system() == "Windows" else "bin",
+    "python.exe" if platform.system() == "Windows" else "python"
+)
 
 if not os.path.exists(PYTHON_EXEC):
     raise FileNotFoundError(f"Python executable not found at {PYTHON_EXEC}")
@@ -29,6 +33,7 @@ output_text.tag_config("success", foreground="#27AE60", font=("Arial", 10, "bold
 output_text.tag_config("alert", foreground="#C0392B", font=("Arial", 10, "bold"))
 output_text.tag_config("touchid", foreground="#9B59B6", font=("Arial", 10, "bold"))
 output_text.tag_config("explanation", foreground="#34495E", font=("Arial", 10, "italic"))
+
 
 def insert_tagged(line):
     line = line.strip()
