@@ -4,18 +4,14 @@ import datetime
 import time
 import sys
 import io
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+# Force UTF-8 stdout for emoji and international char support
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 def read_windows_login_events(server='localhost', log_type='Security', last_hours=24):
-    """
-    Reads login-related events from Windows Security log for the last N hours.
-    Event ID 4624 = Successful login
-    Event ID 4625 = Failed login
-    """
     events = []
     hand = win32evtlog.OpenEventLog(server, log_type)
     flags = win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
-
     time_cutoff = datetime.datetime.now() - datetime.timedelta(hours=last_hours)
     seen = set()
 
@@ -39,7 +35,6 @@ def read_windows_login_events(server='localhost', log_type='Security', last_hour
     return list(reversed(events))
 
 def monitor_log_realtime(poll_interval=5):
-    """ Continuously monitor and print new login events every N seconds """
     seen = set()
     while True:
         new_events = read_windows_login_events()
