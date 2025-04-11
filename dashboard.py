@@ -116,7 +116,7 @@ def create_button(text, command, color):
 
 firewall_script = os.path.join(BASE_DIR, "firewall_creation", "firewall_rule_gen_windows.py" if platform.system() == "Windows" else "firewall_rule_gen.py")
 log_script = os.path.join(BASE_DIR, "log_monitoring", "windows_log_parsing.py" if platform.system() == "Windows" else "log_parsing.py")
-vuln_script = os.path.join(BASE_DIR, "vulnerability_scan", "nmap_scan.py")
+vuln_script = os.path.join(BASE_DIR, "vulnerability_scan", "nmap_scan_windows.py" if platform.system() == "Windows" else "nmap_scan.py")
 
 button_frame = tk.Frame(root, bg="#2C3E50")
 button_frame.pack(pady=20)
