@@ -2,6 +2,9 @@ import win32evtlog
 import win32con
 import datetime
 import time
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 def read_windows_login_events(server='localhost', log_type='Security', last_hours=24):
     """
