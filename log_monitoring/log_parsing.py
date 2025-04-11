@@ -21,7 +21,6 @@ SUCCESSFUL_LOGIN_PATTERNS = [
 ]
 
 TOUCH_ID_PROMPT_PATTERN = r"Touch ID or Enter Password"
-
 SSH_LOGIN_PATTERN = r"sshd.*Accepted.*for (\w+) from ([\d\.]+)"
 
 NOISE_FILTERS = [
@@ -31,6 +30,7 @@ NOISE_FILTERS = [
     r"SecError",
 ]
 
+# Log commands
 REAL_TIME_LOG_COMMAND = """log stream --style syslog \
 --predicate '(process == "sshd" OR composedMessage CONTAINS[c] "authentication" OR composedMessage CONTAINS[c] "authorization succeeded" OR composedMessage CONTAINS[c] "session opened" OR composedMessage CONTAINS[c] "Touch ID or Enter Password" OR composedMessage CONTAINS[c] "user authenticated")' \
 --info"""
@@ -39,8 +39,11 @@ PAST_24H_LOG_COMMAND = """log show --last 24h \
 --predicate '(process == "sshd" OR composedMessage CONTAINS[c] "authentication failed" OR composedMessage CONTAINS[c] "login failed" OR composedMessage CONTAINS[c] "Touch ID or Enter Password")' \
 --info"""
 
+# Timers and duplicate filters
 touch_id_prompt_time = None
 last_touch_prompt_time = None
+last_failed_log = ""
+last_failed_time = None
 touch_id_window = timedelta(seconds=10)
 
 def search_past_24h():
@@ -49,7 +52,7 @@ def search_past_24h():
     process_logs(log_lines)
 
 def process_logs(log_lines):
-    global touch_id_prompt_time, last_touch_prompt_time
+    global touch_id_prompt_time, last_touch_prompt_time, last_failed_log, last_failed_time
 
     for line in log_lines:
         if not line.strip():
@@ -59,7 +62,7 @@ def process_logs(log_lines):
         ts_str = timestamp.strftime("[%Y-%m-%d %H:%M:%S]") if timestamp else "[?]"
         log_summary = summarize_log(line)
 
-        # SSH login with IP and username
+        # SSH login detection
         ssh_match = re.search(SSH_LOGIN_PATTERN, line)
         if ssh_match:
             username, ip = ssh_match.groups()
@@ -71,7 +74,7 @@ def process_logs(log_lines):
             print("━" * 40, flush=True)
             continue
 
-        # Deduplicate Touch ID prompts
+        # Touch ID Prompt deduplication
         if TOUCH_ID_PROMPT_PATTERN in line:
             if last_touch_prompt_time and timestamp and (timestamp - last_touch_prompt_time).total_seconds() < 2:
                 continue
@@ -83,9 +86,23 @@ def process_logs(log_lines):
             print(f"🔍 {log_summary}")
             print("━" * 40, flush=True)
 
+        # Failed Login deduplication
         elif any(re.search(pat, line, re.IGNORECASE) for pat in FAILED_LOGIN_PATTERNS):
             if not any(re.search(noise, line, re.IGNORECASE) for noise in NOISE_FILTERS):
+                if (
+                    last_failed_log == line
+                    and last_failed_time
+                    and timestamp
+                    and (timestamp - last_failed_time).total_seconds() < 2
+                ):
+                    continue  # Suppress duplicate
+                last_failed_log = line
+                last_failed_time = timestamp
+
                 explanation = generate_explanation(line, "failed")
+                if "opendirectoryd" in line.lower() and touch_id_prompt_time and timestamp and (timestamp - touch_id_prompt_time) < touch_id_window:
+                    explanation += " (This may be a background system retry after Touch ID.)"
+
                 print("\n" + "━" * 40)
                 print(f"[❌ ALERT] Login Failed")
                 print(f"🕒 {ts_str}")
@@ -93,6 +110,7 @@ def process_logs(log_lines):
                 print(f"ℹ️ {explanation}")
                 print("━" * 40, flush=True)
 
+        # Successful Login
         elif any(re.search(pat, line, re.IGNORECASE) for pat in SUCCESSFUL_LOGIN_PATTERNS):
             if touch_id_prompt_time and timestamp and timestamp - touch_id_prompt_time <= touch_id_window:
                 print("\n" + "━" * 40)
@@ -134,7 +152,6 @@ def generate_explanation(log_line, status):
     return "Unknown login event detected."
 
 def summarize_log(log_line):
-    # Clean line and remove unnecessary parts like spinner
     line = clean_log_output(log_line)
     line = re.sub(r",?\s*spinner:\d+", "", line, flags=re.IGNORECASE)
 
@@ -168,4 +185,3 @@ if __name__ == "__main__":
     print("🔍 Fetching login attempts from the last 24 hours...\n", flush=True)
     search_past_24h()
     monitor_logs()
-    
