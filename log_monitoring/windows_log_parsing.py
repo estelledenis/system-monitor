@@ -48,6 +48,7 @@ def read_windows_login_events(server='localhost', log_type='Security', last_hour
             # We only care about 4624 (success) or 4625 (failure)
             if event.EventID in [4624, 4625]:
                 # Use (RecordNumber, TimeGenerated) to deduplicate
+                print("Getting logs...")
                 key = (event.RecordNumber, event.TimeGenerated)
                 if key in seen:
                     continue
