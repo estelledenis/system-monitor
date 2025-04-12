@@ -17,7 +17,7 @@ except ImportError:
 
 # Setup Python to handle UTF-8 output on Windows terminals
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
-os.system("chcp 65001 >nul")
+os.system("chcp 65001")
 
 
 def read_windows_login_events(server='localhost', log_type='Security', last_hours=24):
