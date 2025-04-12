@@ -2,7 +2,6 @@ import sqlite3
 import os
 
 def insert_login_attempt(username, ip_address, status, event_time=None, db_path="system_monitor.db"):
-    print(f"DEBUG: writing to {os.path.abspath(db_path)} user={username}, ip={ip_address}, status={status}, time={event_time}")
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
