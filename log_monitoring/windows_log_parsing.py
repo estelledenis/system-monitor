@@ -98,6 +98,6 @@ def monitor_log_realtime(poll_interval=5):
 
 
 if __name__ == '__main__':
-    print("Real-time Windows login monitoring started...")
+    print("Real-time Windows login monitoring started...", flush=True)
     # This will poll the logs every 5 seconds, print new events, and insert them into the DB
     monitor_log_realtime(poll_interval=5)
