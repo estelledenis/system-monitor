@@ -1,15 +1,21 @@
 import sqlite3
 
-def insert_login_attempt(username, ip_address, status, db_path="system_monitor.db"):
-    """
-    Inserts a new login attempt record into the 'login_attempts' table.
-    """
+def insert_login_attempt(username, ip_address, status, event_time=None, db_path="system_monitor.db"):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     c.execute('''
-        INSERT INTO login_attempts (username, ip_address, status)
-        VALUES (?, ?, ?)
-    ''', (username, ip_address, status))
+        CREATE TABLE IF NOT EXISTS login_attempts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT,
+            ip_address TEXT,
+            status TEXT NOT NULL,
+            event_time TEXT
+        )
+    ''')
+    c.execute('''
+        INSERT INTO login_attempts (username, ip_address, status, event_time)
+        VALUES (?, ?, ?, ?)
+    ''', (username, ip_address, status, event_time))
     conn.commit()
     conn.close()
 
