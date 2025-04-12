@@ -17,7 +17,7 @@ def create_tables(db_path="system_monitor.db"):
     ip_address TEXT,
     status TEXT NOT NULL,
     event_time TEXT
-    );
+);
 
     # Add more tables here as needed, e.g., vulnerability_scan, firewall_actions, etc.
 
