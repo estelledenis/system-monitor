@@ -12,13 +12,12 @@ def create_tables(db_path="system_monitor.db"):
     # Example table for login attempts
     c.execute('''
         CREATE TABLE IF NOT EXISTS login_attempts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            ip_address TEXT,
-            status TEXT NOT NULL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    ip_address TEXT,
+    status TEXT NOT NULL,
+    event_time TEXT
+    );
 
     # Add more tables here as needed, e.g., vulnerability_scan, firewall_actions, etc.
 
