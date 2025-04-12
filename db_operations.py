@@ -16,6 +16,7 @@ def insert_login_attempt(username, ip_address, status, event_time=None, db_path=
         INSERT INTO login_attempts (username, ip_address, status, event_time)
         VALUES (?, ?, ?, ?)
     ''', (username, ip_address, status, event_time))
+    print(f"Inserting: user={username}, ip={ip_address}, status={status}, time={event_time} into {db_path}")
     conn.commit()
     conn.close()
 
