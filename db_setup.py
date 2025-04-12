@@ -12,15 +12,15 @@ def create_tables(db_path="system_monitor.db"):
     # Example table for login attempts
     c.execute('''
         CREATE TABLE IF NOT EXISTS login_attempts (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL,
-    ip_address TEXT,
-    status TEXT NOT NULL,
-    event_time TEXT
-);
-
-    # Add more tables here as needed, e.g., vulnerability_scan, firewall_actions, etc.
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            ip_address TEXT,
+            status TEXT NOT NULL,
+            event_time TEXT
+        );
+    ''')
 
     conn.commit()
     conn.close()
     print(f"Database tables ensured at {os.path.abspath(db_path)}")
+
