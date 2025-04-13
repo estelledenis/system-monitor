@@ -120,7 +120,7 @@ progress_bar = ttk.Progressbar(root, orient="horizontal", length=400, mode="dete
 progress_bar.pack(pady=10)
 
 def create_button(text, command, color):
-    return tk.Button(button_frame, text=text, command=command, font=("Arial", 12, "bold"), bg=color, fg="black", width=25, anchor="w", relief="raised", bd=4, padx=10, pady=5, activebackground="#34495E", activeforeground="black")
+    return tk.Button(button_frame, text=text, command=command, font=("Arial", 12, "bold"), bg=color, fg="black", width=25, justify="center", relief="raised", bd=4, padx=10, pady=5, activebackground="#34495E", activeforeground="black")
 
 firewall_script = os.path.join(BASE_DIR, "firewall_creation", "firewall_rule_gen_windows.py" if IS_WINDOWS else "firewall_rule_gen.py")
 log_script = os.path.join(BASE_DIR, "log_monitoring", "windows_log_parsing.py" if IS_WINDOWS else "log_parsing.py")
