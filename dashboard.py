@@ -18,6 +18,7 @@ PYTHON_EXEC = os.path.join(
 if not os.path.exists(PYTHON_EXEC):
     raise FileNotFoundError(f"Python executable not found at {PYTHON_EXEC}")
 
+IS_WINDOWS = platform.system() == "Windows"
 progress_bar_running = False
 progress_thread = None
 
@@ -121,23 +122,28 @@ progress_bar.pack(pady=10)
 def create_button(text, command, color):
     return tk.Button(button_frame, text=text, command=command, font=("Arial", 12, "bold"), bg=color, fg="black", width=25, anchor="w", relief="raised", bd=4, padx=10, pady=5, activebackground="#34495E", activeforeground="black")
 
-firewall_script = os.path.join(BASE_DIR, "firewall_creation", "firewall_rule_gen_windows.py" if platform.system() == "Windows" else "firewall_rule_gen.py")
-log_script = os.path.join(BASE_DIR, "log_monitoring", "windows_log_parsing.py" if platform.system() == "Windows" else "log_parsing.py")
+firewall_script = os.path.join(BASE_DIR, "firewall_creation", "firewall_rule_gen_windows.py" if IS_WINDOWS else "firewall_rule_gen.py")
+log_script = os.path.join(BASE_DIR, "log_monitoring", "windows_log_parsing.py" if IS_WINDOWS else "log_parsing.py")
 vuln_script = os.path.join(BASE_DIR, "vulnerability_scan", "nmap_scan.py")
 
 button_frame = tk.Frame(root, bg="#2C3E50")
 button_frame.pack(pady=20)
 
-firewall_btn = create_button("🔥 Run Firewall Monitoring", lambda: run_script(firewall_script, output_text, "🔥 Creating firewall rules...", progress_bar, estimated_runtime=30), "#E74C3C")
+firewall_label = "Run Firewall Monitoring 🔥" if IS_WINDOWS else "🔥 Run Firewall Monitoring"
+copy_label = "Copy Firewall Command 📋" if IS_WINDOWS else "📋 Copy Firewall Command"
+log_label = "Run Log Monitoring 🔍" if IS_WINDOWS else "🔍 Run Log Monitoring"
+vuln_label = "Run Vulnerability Scan 🛡️" if IS_WINDOWS else "🛡️ Run Vulnerability Scan"
+
+firewall_btn = create_button(firewall_label, lambda: run_script(firewall_script, output_text, firewall_label, progress_bar, estimated_runtime=30), "#E74C3C")
 firewall_btn.grid(row=0, column=0, padx=15, pady=5, sticky="ew")
 
-copy_btn = create_button("📋 Copy Firewall Command", copy_firewall_batch, "#F1C40F")
+copy_btn = create_button(copy_label, copy_firewall_batch, "#F1C40F")
 copy_btn.grid(row=0, column=1, padx=15, pady=5, sticky="ew")
 
-log_btn = create_button("🔍 Run Log Monitoring", lambda: run_script(log_script, output_text, "🔍 Running Log Monitoring...", progress_bar, estimated_runtime=30), "#3498DB")
+log_btn = create_button(log_label, lambda: run_script(log_script, output_text, log_label, progress_bar, estimated_runtime=30), "#3498DB")
 log_btn.grid(row=1, column=0, padx=15, pady=5, sticky="ew")
 
-vuln_btn = create_button("🛡️ Run Vulnerability Scan", lambda: run_script(vuln_script, output_text, "🛡️ Running Vulnerability Scan...", progress_bar, estimated_runtime=180), "#2ECC71")
+vuln_btn = create_button(vuln_label, lambda: run_script(vuln_script, output_text, vuln_label, progress_bar, estimated_runtime=180), "#2ECC71")
 vuln_btn.grid(row=1, column=1, padx=15, pady=5, sticky="ew")
 
 button_frame.grid_columnconfigure(0, weight=1)
