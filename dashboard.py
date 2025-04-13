@@ -132,7 +132,7 @@ button_frame.pack(pady=20)
 firewall_label = "Run Firewall Monitoring 🔥" if IS_WINDOWS else "🔥 Run Firewall Monitoring"
 copy_label = "Copy Firewall Command 📋" if IS_WINDOWS else "📋 Copy Firewall Command"
 log_label = "Run Log Monitoring 🔍" if IS_WINDOWS else "🔍 Run Log Monitoring"
-vuln_label = "Run Vulnerability Scan 🛡️" if IS_WINDOWS else "🛡️ Run Vulnerability Scan"
+vuln_label = "Run Vulnerability Scan 🛡️ " if IS_WINDOWS else "🛡️ Run Vulnerability Scan"
 
 firewall_btn = create_button(firewall_label, lambda: run_script(firewall_script, output_text, firewall_label, progress_bar, estimated_runtime=30), "#E74C3C")
 firewall_btn.grid(row=0, column=0, padx=15, pady=5, sticky="ew")
