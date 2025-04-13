@@ -24,7 +24,7 @@ progress_thread = None
 
 root = tk.Tk()
 root.title("System Monitoring Dashboard")
-root.geometry("750x500")
+root.geometry("750x540")
 root.configure(bg="#2C3E50")
 
 output_text = scrolledtext.ScrolledText(root, width=75, height=15, wrap=tk.WORD, bg="#ECF0F1", fg="#2C3E50", font=("Arial", 10))
@@ -128,7 +128,7 @@ log_script = os.path.join(BASE_DIR, "log_monitoring", "windows_log_parsing.py" i
 vuln_script = os.path.join(BASE_DIR, "vulnerability_scan", "nmap_scan.py")
 
 button_frame = tk.Frame(root, bg="#2C3E50")
-button_frame.pack(pady=20)
+button_frame.pack(pady=20, fill="x", expand=True)
 
 firewall_label = "Run Firewall Monitoring 🔥" if IS_WINDOWS else "🔥 Run Firewall Monitoring"
 copy_label = "Copy Firewall Command 📋" if IS_WINDOWS else "📋 Copy Firewall Command"
