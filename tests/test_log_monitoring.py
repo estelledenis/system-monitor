@@ -1,5 +1,8 @@
 import pytest
 from log_monitoring import windows_log_parsing as logs
+from tests import setup_test_environment
+setup_test_environment()
+
 
 def test_parse_login_events(monkeypatch):
     class DummyEvent:
