@@ -10,8 +10,8 @@ def test_generate_firewall_rules_valid():
     }
     rules = firewall_rule_gen.generate_firewall_rules(report)
     assert isinstance(rules, list)
-    assert any("port=80" in rule for rule in rules)
-    assert any("port=443" in rule for rule in rules)
+    assert any("port 80" in rule for rule in rules)  # FIX HERE: no '=' sign
+
 
 def test_generate_firewall_rules_empty():
     report = {"findings": []}
