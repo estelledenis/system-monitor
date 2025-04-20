@@ -80,6 +80,26 @@ def test_load_vulnerability_report_invalid_json(tmp_path, monkeypatch):
     with pytest.raises(SystemExit):
         firewall_rule_gen.load_vulnerability_report()
 
+def test_apply_firewall_rules_writes_correct_content(tmp_path):
+    """Test that apply_firewall_rules writes the expected firewall rules."""
+    dummy_rules = [
+        "block drop in proto tcp from any to any port 80",
+        "block return in proto tcp from any to any port 443"
+    ]
+
+    pf_rules_file = tmp_path / "block_ports.conf"
+
+    firewall_rule_gen.apply_firewall_rules(dummy_rules, pf_rules_file=str(pf_rules_file))
+
+    assert pf_rules_file.exists()
+
+    with open(pf_rules_file, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "# Auto-generated firewall rules" in content
+    for rule in dummy_rules:
+        assert rule in content
+
 
 def main():
     print("[+] Loading vulnerability report...")
