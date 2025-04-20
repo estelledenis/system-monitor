@@ -9,12 +9,14 @@ def test_scan_localhost_windows(mock_portscanner_class):
 
     mock_host.all_protocols.return_value = ['tcp']
     mock_host.has_tcp.return_value = True
-    mock_host.__getitem__.side_effect = lambda protocol: {
-        3389: {"state": "open"}
-    } if protocol == 'tcp' else {}
-
+    mock_host = {
+        'tcp': {
+            3389: {"state": "open"}
+        }
+    }
     mock_scanner.__getitem__.return_value = mock_host
     mock_portscanner_class.return_value = mock_scanner
+
 
     from vulnerability_scan import nmap_scan_windows
 
