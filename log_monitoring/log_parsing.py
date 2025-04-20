@@ -181,6 +181,20 @@ def monitor_logs():
         print("\n🛑 Stopping monitoring.", flush=True)
         process.terminate()
 
+def parse_logs(logs):
+    """
+    Parses logs into a simplified dictionary list for testing.
+    If missing fields, defaults are used.
+    """
+    parsed = []
+    for log in logs:
+        parsed.append({
+            "event_id": log.get("event_id", 0),
+            "message": log.get("message", "")
+        })
+    return parsed
+
+
 if __name__ == "__main__":
     print("🔍 Fetching login attempts from the last 24 hours...\n", flush=True)
     search_past_24h()
