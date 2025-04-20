@@ -20,24 +20,24 @@ def load_vulnerability_report(report_file="nmap_scan_report.json"):
 def generate_firewall_rules(report):
     """Generates macOS PF firewall rules based on detected vulnerabilities."""
     firewall_rules = []
-    high_risk_ports = []
-    medium_risk_ports = []
 
     for finding in report.get("findings", []):
-        port = finding.get("Port Number")
+        port = finding.get("port") or finding.get("Port Number")
         risk_level = finding.get("Risk Assessment", "Unknown")
+
+        if not port:
+            continue
 
         if "🔴 High" in risk_level:
             print(f"[!] High-risk detected on port {port}, blocking it.")
-            firewall_rules.append(f"block drop in proto tcp from any to any port {port}")
-            high_risk_ports.append(port)
+            firewall_rules.append(f"block drop proto tcp from any to any port {port}")
 
         elif "🟡 Medium" in risk_level:
             print(f"[-] Medium-risk detected on port {port}, adding return block.")
-            firewall_rules.append(f"block return in proto tcp from any to any port {port}")
-            medium_risk_ports.append(port)
+            firewall_rules.append(f"block return proto tcp from any to any port {port}")
 
-    return firewall_rules + high_risk_ports + medium_risk_ports
+    return firewall_rules
+
 
 
 def apply_firewall_rules(firewall_rules, pf_rules_file=None):
