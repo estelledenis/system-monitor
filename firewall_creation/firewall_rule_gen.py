@@ -2,6 +2,9 @@ import json
 import subprocess
 import os
 import tempfile
+import pytest
+import builtins
+from firewall_creation import firewall_rule_gen
 
 output_path = os.path.join(tempfile.gettempdir(), "nmap_scan_report.json")
 
@@ -55,6 +58,27 @@ def apply_firewall_rules(firewall_rules, pf_rules_file=None):
 
     except Exception as e:
         print(f"Error applying firewall rules: {e}")
+
+
+def test_load_vulnerability_report_file_not_found(monkeypatch):
+    """Simulate missing report file."""
+    missing_path = os.path.join(os.environ.get("TEMP", "/tmp"), "nonexistent_report.json")
+
+    monkeypatch.setattr(firewall_rule_gen, "output_path", missing_path)
+
+    with pytest.raises(SystemExit):
+        firewall_rule_gen.load_vulnerability_report()
+
+def test_load_vulnerability_report_invalid_json(tmp_path, monkeypatch):
+    """Simulate corrupted JSON file."""
+    # Create a temporary invalid JSON file
+    bad_json_path = tmp_path / "nmap_scan_report.json"
+    bad_json_path.write_text("{ invalid json ")
+
+    monkeypatch.setattr(firewall_rule_gen, "output_path", str(bad_json_path))
+
+    with pytest.raises(SystemExit):
+        firewall_rule_gen.load_vulnerability_report()
 
 
 def main():
