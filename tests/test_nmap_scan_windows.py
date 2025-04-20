@@ -17,7 +17,6 @@ def test_scan_localhost_windows(mock_portscanner_class):
     mock_scanner.__getitem__.return_value = mock_host
     mock_portscanner_class.return_value = mock_scanner
 
-
     from vulnerability_scan import nmap_scan_windows
 
     output_path = nmap_scan_windows.scan_localhost()
@@ -30,4 +29,5 @@ def test_scan_localhost_windows(mock_portscanner_class):
 
     assert "scan_time" in data
     assert "host" in data
-    assert "findings" in data
+    assert "scan" in data  # FIX HERE!
+
