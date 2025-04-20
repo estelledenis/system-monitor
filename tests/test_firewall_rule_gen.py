@@ -1,18 +1,25 @@
-import pytest
 from firewall_creation import firewall_rule_gen
+import pytest
 
 def test_generate_firewall_rules_valid():
-    ports = [80, 443]
-    rules = firewall_rule_gen.generate_firewall_rules(ports)
+    report = {
+        "findings": [
+            {"port": 80, "Risk Assessment": "High"},
+            {"port": 443, "Risk Assessment": "Medium"}
+        ]
+    }
+    rules = firewall_rule_gen.generate_firewall_rules(report)
     assert isinstance(rules, list)
-    assert all('allow' in rule.lower() or 'accept' in rule.lower() for rule in rules)
+    assert any("port=80" in rule for rule in rules)
+    assert any("port=443" in rule for rule in rules)
 
 def test_generate_firewall_rules_empty():
-    ports = []
-    rules = firewall_rule_gen.generate_firewall_rules(ports)
+    report = {"findings": []}
+    rules = firewall_rule_gen.generate_firewall_rules(report)
+    assert isinstance(rules, list)
     assert rules == []
 
 def test_generate_firewall_rules_invalid():
-    ports = None
-    with pytest.raises(TypeError):
-        firewall_rule_gen.generate_firewall_rules(ports)
+    report = None
+    with pytest.raises(AttributeError):
+        firewall_rule_gen.generate_firewall_rules(report)
