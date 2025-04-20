@@ -1,6 +1,9 @@
 import pytest
 import tempfile
 import os
+from tests import setup_test_environment
+setup_test_environment()
+
 from firewall_creation import firewall_rule_gen_windows as fw
 
 def test_generate_windows_firewall_rules():
