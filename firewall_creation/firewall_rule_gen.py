@@ -37,7 +37,8 @@ def generate_firewall_rules(report):
             firewall_rules.append(f"block return in proto tcp from any to any port {port}")
             medium_risk_ports.append(port)
 
-    return firewall_rules, high_risk_ports + medium_risk_ports
+    return firewall_rules + high_risk_ports + medium_risk_ports
+
 
 def apply_firewall_rules(firewall_rules, pf_rules_file=None):
     if pf_rules_file is None:
