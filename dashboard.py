@@ -122,12 +122,21 @@ def run_script(script_path, output_widget, message, progress_bar, estimated_runt
 
     threading.Thread(target=task, daemon=True).start()
 
+
 def copy_firewall_batch():
     rules_file = os.path.join(tempfile.gettempdir(), "windows_firewall_rules.bat")
     if os.path.exists(rules_file):
-        root.clipboard_clear()
-        root.clipboard_append(rules_file)
-        insert_tagged("\nCopied path to firewall rules batch file to clipboard.\n")
+        try:
+            with open(rules_file, "r", encoding="utf-8") as f:
+                rules_content = f.read()
+            if rules_content.strip():
+                root.clipboard_clear()
+                root.clipboard_append(rules_content)
+                insert_tagged("\n[✔] Copied firewall rules to clipboard.\n")
+            else:
+                insert_tagged("\nERROR: Firewall rules file is empty.\n")
+        except Exception as e:
+            insert_tagged(f"\nERROR reading firewall rules: {e}\n")
     else:
         insert_tagged("\nERROR: No firewall batch file found. Run scan first.\n")
 
