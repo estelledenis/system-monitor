@@ -6,6 +6,16 @@ import sys
 import io
 import os
 
+# 1. IMPORT YOUR DB FUNCTION
+# Make sure you have a db_operations.py with insert_login_attempt defined as described above.
+try:
+    from db_operations import insert_login_attempt
+except ImportError:
+    def insert_login_attempt(*args, **kwargs):
+        # Fallback if db_operations isn't available
+        pass
+
+# Setup Python to handle UTF-8 output on Windows terminals
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 os.system("chcp 65001 >nul")
 
@@ -28,23 +38,38 @@ def read_windows_login_events(server='localhost', log_type='Security', last_hour
                 if key in seen:
                     continue
                 seen.add(key)
+
                 inserts = event.StringInserts or []
                 user = inserts[5] if len(inserts) > 5 else "?"
                 process = inserts[17] if len(inserts) > 17 else "?"
-                msg = f"[{event.TimeGenerated.Format()}] | {'SUCCESS' if event.EventID == 4624 else 'FAILURE'} | User: {user} | Source: {process}"
+                status = "SUCCESS" if event.EventID == 4624 else "FAILURE"
+
+                event_time_str = event.TimeGenerated.Format()
+
+                msg = f"[{event_time_str}] | {status} | User: {user} | Source: {process}"
                 events.append(msg)
+
+                insert_login_attempt(
+                    username=user,
+                    ip_address=process,
+                    status=status,
+                    event_time=event_time_str
+                )
+
     return list(reversed(events))
 
 def monitor_log_realtime(poll_interval=5):
     seen = set()
+
     while True:
         new_events = read_windows_login_events()
         for event in new_events:
             if event not in seen:
-                print(event)
+                print(event, flush=True)
                 seen.add(event)
         time.sleep(poll_interval)
 
 if __name__ == '__main__':
-    print("Real-time Windows login monitoring started...")
+    print("Real-time Windows login monitoring started...", flush=True)
     monitor_log_realtime(poll_interval=5)
+
