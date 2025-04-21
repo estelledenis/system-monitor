@@ -73,7 +73,7 @@ def process_logs(log_lines):
         event_time = timestamp.strftime("%Y-%m-%d %H:%M:%S") if timestamp else None
         username = "Unknown"
         ip_address = "Unknown"
-        status = "INFO"  # We'll override as SUCCESS/FAILURE/SSH_LOGIN, etc.
+        status = "INFO"
 
         # SSH login detection
         ssh_match = re.search(SSH_LOGIN_PATTERN, line)
@@ -87,9 +87,6 @@ def process_logs(log_lines):
             print(f"👤 User: {username}")
             print(f"📍 IP: {ip_address}")
             print("━" * 40, flush=True)
-
-            # 3. STORE EVENT IN DB
-            insert_login_attempt(username, ip_address, status, event_time)
             continue
 
         # Touch ID Prompt deduplication
@@ -105,7 +102,6 @@ def process_logs(log_lines):
             print(f"🔍 {log_summary}")
             print("━" * 40, flush=True)
             # This might be purely informational, so we won't store or we can store "TOUCH_ID_PROMPT"
-            # insert_login_attempt("Unknown", "Unknown", "TOUCH_ID_PROMPT", event_time)
 
         # Failed Login
         elif any(re.search(pat, line, re.IGNORECASE) for pat in FAILED_LOGIN_PATTERNS):
@@ -140,9 +136,7 @@ def process_logs(log_lines):
                 print(f"ℹ️ {explanation}")
                 print("━" * 40, flush=True)
 
-                # 3. STORE EVENT IN DB
-                insert_login_attempt(username, ip_address, status, event_time)
-
+        
         # Successful Login
         elif any(re.search(pat, line, re.IGNORECASE) for pat in SUCCESSFUL_LOGIN_PATTERNS):
             if touch_id_prompt_time and timestamp and timestamp - touch_id_prompt_time <= touch_id_window:
@@ -156,8 +150,7 @@ def process_logs(log_lines):
                 # Clear the last prompt time
                 touch_id_prompt_time = None
 
-                # 3. STORE EVENT IN DB
-                insert_login_attempt(username, ip_address, status, event_time)
+
             else:
                 status = "SUCCESS"
                 explanation = generate_explanation(line, "success")
@@ -168,8 +161,7 @@ def process_logs(log_lines):
                 print(f"ℹ️ {explanation}")
                 print("━" * 40, flush=True)
 
-                # 3. STORE EVENT IN DB
-                insert_login_attempt(username, ip_address, status, event_time)
+
 
 def extract_timestamp(log_line):
     """
