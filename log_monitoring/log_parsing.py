@@ -4,13 +4,6 @@ import subprocess
 import sys
 from datetime import datetime, timedelta
 
-# 1. IMPORT YOUR DB FUNCTION
-# Make sure you have db_operations.py with insert_login_attempt defined.
-# Example:
-# def insert_login_attempt(username, ip_address, status, event_time=None, db_path="system_monitor.db"):
-#     ...
-from db_operations import insert_login_attempt
-
 
 # Patterns
 FAILED_LOGIN_PATTERNS = [
