@@ -78,7 +78,10 @@ Below is an example of the result of the firewall rule creation on the System Mo
 
 
 To check if Python is installed:
-```python3 --version```
+
+```python3 --version``` (Mac)
+
+```python --version``` (Windows)
 
 if not, download it from python.org.
 
@@ -86,19 +89,22 @@ To check if pip is installed:
 ```pip --version```
 
 if not:
-```python3 -m ensurepip --upgrade```
+```python3 -m ensurepip --upgrade``` (Mac)
 
-or install via homebrew:
+```python -m ensurepip --upgrade``` (Windows)
+
+or install via homebrew if using MacOC:
 ```brew install python3```
 
 
+## For MacOS ##
 ### 1. Clone the repository ###
 ```git clone https://github.com/estelledenis/system-monitor.git```
 
 ```cd system-monitor```
 
 
-### 2. Set up virtual environment ###
+### 2. Set up virtual environment & install requirements ###
 ```python3 -m venv venv```
 
 ```source venv/bin/activate```
@@ -109,5 +115,31 @@ or install via homebrew:
 ### 3. Run the app ###
 ```bash start_dashboard.sh```
 
-### 4. Apply firewall rules (after vulnerability scan) ###
+
+
+## For Windows ##
+### 1. Clone the repository ###
+Ensure Command Prompt is opened with Administrator privileges (left-click).
+
+```git clone https://github.com/estelledenis/system-monitor.git```
+
+```cd system-monitor```
+
+### 2. Set up virtual environment & install requirements ###
+
+```python -m venv venv```
+
+```.\venv\Scripts\activate```
+
+```pip install -r requirements.txt```
+
+```pip install pywin32```
+
+### 3. Run the app ###
+
+```python dashboard.py```
+
+
+## Running Firewall Commands ##
+
 After running a vulnerability scan and firewall generation, activate the rules manually by clicking the "Copy Firewall Command" button. Open a new terminal and run the command.
